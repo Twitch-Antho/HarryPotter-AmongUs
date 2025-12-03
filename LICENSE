@@ -657,9 +657,10 @@ Les commandes hypothétiques « show w » et « show c » devraient afficher le 
 parties de la Licence Publique Générale.  Bien sûr, les commandes de votre programme
 cela pourrait être différent ; pour une interface graphique, vous utiliserez une "boîte à propos".
 
-  You should also get your employer (if you work as a programmer) or school,
-if any, to sign a "copyright disclaimer" for the program, if necessary.
-For more information on this, and how to apply and follow the GNU GPL, see
+  Vous devriez également faire signer à votre employeur (si vous travaillez comme programmeur) ou à votre établissement scolaire,
+
+le cas échéant, une « décharge de responsabilité relative aux droits d'auteur » pour le programme.
+Pour plus d'informations à ce sujet, et sur la manière d'appliquer et de respecter la licence GNU GPL, consultez :
 <https://www.gnu.org/licenses/>.
 
  La licence publique générale GNU ne permet pas d'incorporer votre programme
