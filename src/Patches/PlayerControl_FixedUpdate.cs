@@ -1,23 +1,47 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using HarryPotter.Classes;
-using InnerNet;
 
 namespace HarryPotter.Patches
 {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
-    public class PlayerControl_FixedUpdate
+    public static class PlayerControl_FixedUpdate
     {
-        static void Postfix(PlayerControl __instance)
+        public static void Postfix(PlayerControl __instance)
         {
-            if (__instance.AmOwner)
+            // Ne jamais exécuter côté non-owner
+            if (!__instance.AmOwner) 
+                return;
+
+            // Copie locale pour éviter les problèmes IL2CPP "collection modified"
+            var itemsSnapshot = Main.Instance.AllItems.ToList();
+
+            foreach (var wItem in itemsSnapshot)
             {
-                foreach (WorldItem wItem in Main.Instance.AllItems)
+                if (wItem == null) 
+                    continue;
+
+                try
                 {
-                    wItem.DrawWorldIcon();
+                    // Update logique (OK)
                     wItem.Update();
+
+                    // Dessin visuel : mieux ici que dans Update du monobehaviour
+                    wItem.DrawWorldIcon();
+
+                    // Suppression différée
+                    if (wItem.IsPickedUp)
+                        Main.Instance.MarkForRemoval.Add(wItem);
                 }
-    
-                Main.Instance.AllItems.RemoveAll(x => x.IsPickedUp);
+                catch { }
+            }
+
+            // Suppression regroupée (évite les crashs IL2CPP)
+            if (Main.Instance.MarkForRemoval.Count > 0)
+            {
+                foreach (var w in Main.Instance.MarkForRemoval)
+                    Main.Instance.AllItems.Remove(w);
+
+                Main.Instance.MarkForRemoval.Clear();
             }
         }
     }
