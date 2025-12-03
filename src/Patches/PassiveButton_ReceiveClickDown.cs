@@ -1,20 +1,46 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using HarryPotter.Classes;
+using UnityEngine;
 
 namespace HarryPotter.Patches
 {
     [HarmonyPatch(typeof(PassiveButton), nameof(PassiveButton.ReceiveClickDown))]
-    public class PassiveButton_ReceiveClickDown
+    public static class PassiveButton_ReceiveClickDown
     {
-        static void Prefix(PassiveButton __instance)
+        public static void Postfix(PassiveButton __instance)
         {
-            if (__instance == null || __instance.name == null) return;
+            if (__instance == null)
+                return;
 
-            if (__instance.name == "SnitchButton" && Main.Instance.GetLocalModdedPlayer().HasItem(3))
-                Main.Instance.RpcForceAllVotes(__instance.transform.GetComponentInParent<PlayerVoteArea>().TargetPlayerId);
-                
-            if (__instance.name == "SortButton" && Main.Instance.GetLocalModdedPlayer().HasItem(8))
-                Main.Instance.RpcRevealRole((byte)__instance.transform.GetComponentInParent<PlayerVoteArea>().TargetPlayerId);
+            var local = Main.Instance.GetLocalModdedPlayer();
+            if (local == null)
+                return;
+
+            // Sécurise le nom pour IL2CPP
+            string btnName = __instance?.gameObject?.name;
+            if (btnName == null)
+                return;
+
+            // Récupération sécurisée du PlayerVoteArea
+            var voteArea = __instance.transform.GetComponentInParent<PlayerVoteArea>();
+            if (voteArea == null)
+                return;
+
+            byte targetId = voteArea.TargetPlayerId;
+
+            // SNITCH BUTTON
+            if (btnName.Equals("SnitchButton") && local.HasItem(3))
+            {
+                Main.Instance.RpcForceAllVotes(targetId);
+                return;
+            }
+
+            // SORT BUTTON
+            if (btnName.Equals("SortButton") && local.HasItem(8))
+            {
+                Main.Instance.RpcRevealRole(targetId);
+                return;
+            }
         }
     }
 }
