@@ -596,7 +596,7 @@ internal class Main
                     bubble.Cast<ChatBubble>().NameText.color = color;
         if (MeetingHud.Instance && MeetingHud.Instance.playerStates != null)
             foreach (var voteArea in MeetingHud.Instance.playerStates)
-                if (voteArea.TargetPlayerId == player.PlayerId)
+                if (voteArea.PlayerId == player.PlayerId)
                     voteArea.NameText.color = color;
     }
 
@@ -696,7 +696,7 @@ internal class Main
 
         foreach (var voteArea in MeetingHud.Instance.playerStates)
         {
-            if (voteArea.TargetPlayerId != playerId) continue;
+            if (voteArea.PlayerId != playerId) continue;
             var targetPlayer = ModdedPlayerById(playerId);
 
             PopupTMPHandler.Instance.CreatePopup(
@@ -1193,8 +1193,8 @@ internal class Main
             {
                 SoundManager.Instance.PlaySound(MeetingHud.Instance.VoteLockinSound, false);
 
-                playerVoteArea.voteComplete = true;
-                playerVoteArea.VotedFor = playerId;
+                playerVoteArea.VoteComplete = true;
+                playerVoteArea.VotedForId = playerId;
                 playerVoteArea.Flag.enabled = true;
 
                 MeetingHud.Instance.SetDirtyBit(
@@ -1202,7 +1202,7 @@ internal class Main
                 MeetingHud.Instance.CheckForEndVoting();
             }
 
-            if (playerVoteArea.TargetPlayerId == playerId)
+            if (playerVoteArea.PlayerId == playerId)
             {
                 var confirmButton = playerVoteArea.Buttons.GetComponentsInChildren<PassiveButton>()
                     .FirstOrDefault();
@@ -1216,11 +1216,11 @@ internal class Main
             }
 
             playerVoteArea.ClearButtons();
-            playerVoteArea.voteComplete = true;
+            playerVoteArea.VoteComplete = true;
         }
 
         MeetingHud.Instance.SkipVoteButton.ClearButtons();
-        MeetingHud.Instance.SkipVoteButton.voteComplete = true;
+        MeetingHud.Instance.SkipVoteButton.VoteComplete = true;
         MeetingHud.Instance.SkipVoteButton.gameObject.SetActive(false);
     }
 

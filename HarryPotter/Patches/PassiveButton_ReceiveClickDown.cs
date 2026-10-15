@@ -11,9 +11,9 @@ public class PassiveButton_ReceiveClickDown
         if (__instance == null || __instance.name == null) return;
 
         if (__instance.name == "SnitchButton" && Main.Instance.GetLocalModdedPlayer().HasItem(3))
-            Main.Instance.RpcForceAllVotes(__instance.transform.GetComponentInParent<PlayerVoteArea>().TargetPlayerId);
+            Main.Instance.RpcForceAllVotes(__instance.transform.GetComponentInParent<PlayerVoteArea>().PlayerId);
 
         if (__instance.name == "SortButton" && Main.Instance.GetLocalModdedPlayer().HasItem(8))
-            Main.Instance.RpcRevealRole(__instance.transform.GetComponentInParent<PlayerVoteArea>().TargetPlayerId);
+            Main.Instance.RpcRevealRole(__instance.transform.GetComponentInParent<PlayerVoteArea>().PlayerId);
     }
 }
