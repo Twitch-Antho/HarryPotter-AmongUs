@@ -5,12 +5,16 @@ Le Mod est basé sur un thème qui ajoute des éléments de Harry Potter.
 
 Youtube [Antho](https://www.youtube.com/@Royale_Antho)
 
+# Version
+
+Compatible avec **Among Us 2026.9.29** (Steam, Epic, Microsoft Store), **BepInEx 6.0.0-be.735 (IL2CPP)** et **Reactor 2.5.1**.
+
 # Tuto d'installation
 
 Pour un didacticiel d'installation vidéo, allez [Tuto](https://www.youtube.com/watch?v=YfvfaTHEN1Y).
 
-- Cliquez sur l'onglet intitulé ["Releases"](https://github.com/AnthoYt/HarryPotter-AmongUs/releases).
-- Cliquez sur le fichier zip dans la fenêtre de la dernière version (soit "HarryPotter.zip").
+- Allez sur la [dernière version](https://github.com/Twitch-Antho/HarryPotter-AmongUs/releases/latest).
+- Téléchargez `HarryPotter-Steam-Itch.zip` (Steam ou Itch.io) ou `HarryPotter-Epic-MicrosoftStore.zip` (Epic Games ou Microsoft Store).
 - Une fois téléchargé, ouvrez le fichier zip et extrait les fichiers.
 - Ouvrez Steam ou Epic, faites un clic droit sur Among Us, survolez « Gérer », puis appuyez sur « Parcourir les fichiers locaux ».
 - ℹ️ Si vous voyez un dossier appelé "BepInEx", supprimez-le avant d'installer le mod. Ceci permet de vérifier que vous n'installez pas accidentellement plusieurs mods incompatibles. 
@@ -61,6 +65,12 @@ Temps de recharge partagés de Voldemort |  Lorsqu'ils sont activés, les bouton
 # Bugs ou suggestions de fonctionnalités
 Pour obtenir une aide générale sur les problèmes, les suggestions de fonctionnalités ou les bugs, rejoignez le <a href="https://discord.com/invite/ad7aMevNMx" target="_blank">Discord</a>
 Ou réaliser un [Ticket](https://github.com/AnthoYt/Royale-Us/issues/15)
+
+# Crédits
+
+- Mod original par [NotHunter101](https://github.com/FatherofHeathens/HarryPotterAmongUs).
+- Version Reactor par [FangkuaiYa](https://github.com/FangkuaiYa/HarryPotterAmongUs-R), sur laquelle cette version est basée.
+- [Reactor](https://github.com/NuclearPowered/Reactor) et [BepInEx](https://github.com/BepInEx/BepInEx).
 
 # Licence
 Ce logiciel est distribué sous le <a href="./LICENSE">`GNU GPLv3 License`</a>.
