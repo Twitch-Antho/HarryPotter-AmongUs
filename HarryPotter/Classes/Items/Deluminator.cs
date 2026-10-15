@@ -1,4 +1,5 @@
-﻿using System;
+using Hazel;
+using System;
 using HarryPotter.Classes.WorldItems;
 
 namespace HarryPotter.Classes.Items;
@@ -23,9 +24,9 @@ public class Deluminator : Item
         }
         else
         {
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem, SendOption.Reliable);
             writer.Write(Id);
-            writer.EndMessage();
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
 
         Delete();
@@ -36,8 +37,8 @@ public class Deluminator : Item
                 var switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                 switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
                 var writer =
-                    AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.FixLightsRpc);
-                writer.EndMessage();
+                    AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.FixLightsRpc, SendOption.Reliable);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
                 break;
             case false:
                 byte b = 4;

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+using Hazel;
+using HarmonyLib;
 using HarryPotter.Classes;
 using HarryPotter.Classes.Roles;
 
@@ -16,13 +17,13 @@ internal class PlayerPhysics_FixedUpdate
         var vel = (HudManager.Instance.joystick.DeltaL + HudManager.Instance.joystick.DeltaR) * __instance.TrueSpeed;
         controlledPlayer.body.velocity = vel;
         var writer =
-            AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.MoveControlledPlayer);
+            AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.MoveControlledPlayer, SendOption.Reliable);
         writer.Write(controlledPlayer.myPlayer.PlayerId);
         writer.Write(vel.x);
         writer.Write(vel.y);
         writer.Write(controlledPlayer.body.position.x);
         writer.Write(controlledPlayer.body.position.y);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
         return false;
     }
 

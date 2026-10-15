@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+using Hazel;
+using HarmonyLib;
 using HarryPotter.Classes;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
@@ -51,9 +52,9 @@ public class PlayerControl_Exiled
 
                 __instance.myTasks.Insert(0, importantTextTask);
 
-                var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.FinallyDie);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.FinallyDie, SendOption.Reliable);
                 writer.Write(__instance.PlayerId);
-                writer.EndMessage();
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
         }
 

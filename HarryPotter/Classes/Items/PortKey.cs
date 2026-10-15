@@ -1,4 +1,5 @@
-﻿using HarryPotter.Classes.WorldItems;
+using Hazel;
+using HarryPotter.Classes.WorldItems;
 using UnityEngine;
 
 namespace HarryPotter.Classes.Items;
@@ -23,9 +24,9 @@ public class PortKey : Item
         }
         else
         {
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.UseItem, SendOption.Reliable);
             writer.Write(Id);
-            writer.EndMessage();
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
 
         Delete();

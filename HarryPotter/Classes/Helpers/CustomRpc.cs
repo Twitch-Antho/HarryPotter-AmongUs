@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using HarryPotter.Classes.Roles;
 using HarryPotter.Classes.WorldItems;
 using HarryPotter.CustomOption;
@@ -200,10 +200,10 @@ public class CustomRpc
                     Main.Instance.AllItems.RemoveAll(x => x.IsPickedUp);
 
                     var writer =
-                        AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.GiveItem);
+                        AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.GiveItem, SendOption.Reliable);
                     writer.Write(targetPlayer);
                     writer.Write(pickupId);
-                    writer.EndMessage();
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
                 }
 
                 break;

@@ -1,4 +1,5 @@
-﻿using System;
+using Hazel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -407,10 +408,10 @@ internal class Main
         }
         else
         {
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.RequestRole);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.RequestRole, SendOption.Reliable);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(roleName);
-            writer.EndMessage();
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
     }
 
@@ -603,9 +604,9 @@ internal class Main
     {
         Coroutines.Start(CoFakeKill(target));
 
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.FakeKill);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.FakeKill, SendOption.Reliable);
         writer.Write(target.PlayerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public IEnumerator CoFakeKill(PlayerControl target)
@@ -662,13 +663,13 @@ internal class Main
         var velocity = new Vector2(x, y);
         SpawnItem(id, pos, velocity);
 
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.SpawnItem);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.SpawnItem, SendOption.Reliable);
         writer.Write(id);
         writer.Write(pos.x);
         writer.Write(pos.y);
         writer.Write(velocity.x);
         writer.Write(velocity.y);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void RpcRevealRole(byte playerId)
@@ -684,9 +685,9 @@ internal class Main
         GetLocalModdedPlayer().Inventory.Find(x => x.Id == 8).Delete();
         RevealRole(playerId);
 
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.RevealRole);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.RevealRole, SendOption.Reliable);
         writer.Write(playerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void RevealRole(byte playerId)
@@ -718,22 +719,22 @@ internal class Main
             if (body.ParentId == player.PlayerId)
                 Object.Destroy(body.gameObject);
 
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-            (byte)Packets.RevivePlayer);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
+            (byte)Packets.RevivePlayer, SendOption.Reliable);
         writer.Write(player.PlayerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void RpcTeleportPlayer(PlayerControl player, Vector2 position)
     {
         player.NetTransform.SnapTo(position);
 
-        var posWriter = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId,
-            (byte)Packets.TeleportPlayer);
+        var posWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
+            (byte)Packets.TeleportPlayer, SendOption.Reliable);
         posWriter.Write(player.PlayerId);
         posWriter.Write(position.x);
         posWriter.Write(position.y);
-        posWriter.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(posWriter);
     }
 
     public void UseHourglass(PlayerControl player)
@@ -785,9 +786,9 @@ internal class Main
     public void RpcDefensiveDuelist(PlayerControl player)
     {
         DefensiveDuelist(player);
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DefensiveDuelist);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.DefensiveDuelist, SendOption.Reliable);
         writer.Write(player.PlayerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public static void setInvisible(PlayerControl player, Color color, float alpha)
@@ -1011,10 +1012,10 @@ internal class Main
         ModdedPlayerById(playerId).SpeedMultiplier = newSpeed;
 
         var writer =
-            AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.UpdateSpeedMultiplier);
+            AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.UpdateSpeedMultiplier, SendOption.Reliable);
         writer.Write(playerId);
         writer.Write(newSpeed);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void ControlPlayer(PlayerControl controller, PlayerControl target)
@@ -1031,10 +1032,10 @@ internal class Main
     public void RpcControlPlayer(PlayerControl controller, PlayerControl target)
     {
         ControlPlayer(controller, target);
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.StartControlling);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.StartControlling, SendOption.Reliable);
         writer.Write(controller.PlayerId);
         writer.Write(target.PlayerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void InvisPlayer(PlayerControl target)
@@ -1045,9 +1046,9 @@ internal class Main
     public void RpcInvisPlayer(PlayerControl target)
     {
         InvisPlayer(target);
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.InvisPlayer);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.InvisPlayer, SendOption.Reliable);
         writer.Write(target.PlayerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void CrucioBlind(PlayerControl target)
@@ -1059,21 +1060,21 @@ internal class Main
     public void RpcCrucioBlind(PlayerControl target)
     {
         CrucioBlind(target);
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DeactivatePlayer);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.DeactivatePlayer, SendOption.Reliable);
         writer.Write(target.PlayerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void RpcKillPlayer(PlayerControl killer, PlayerControl target, bool isCurseKill = true,
         bool forceShowAnim = false)
     {
         KillPlayer(killer, target, isCurseKill, forceShowAnim);
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.KillPlayerUnsafe);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.KillPlayerUnsafe, SendOption.Reliable);
         writer.Write(killer.PlayerId);
         writer.Write(target.PlayerId);
         writer.Write(isCurseKill);
         writer.Write(forceShowAnim);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void KillPlayer(PlayerControl killer, PlayerControl target, bool isCurseKill, bool forceShowAnim)
@@ -1149,9 +1150,9 @@ internal class Main
             {
                 PlayerDie(target);
 
-                var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.FinallyDie);
+                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.FinallyDie, SendOption.Reliable);
                 writer.Write(target.PlayerId);
-                writer.EndMessage();
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
         }
     }
@@ -1177,9 +1178,9 @@ internal class Main
     {
         GetLocalModdedPlayer().Inventory.Find(x => x.Id == 3).Delete();
         ForceAllVotes(playerId);
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.ForceAllVotes);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.ForceAllVotes, SendOption.Reliable);
         writer.Write(playerId);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void ForceAllVotes(byte playerId)
@@ -1242,8 +1243,8 @@ internal class Main
         crucio.SpellSprites = Assets.CrucioSprite.ToArray();
         crucio.OnHit += (spell, player) =>
         {
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCrucio);
-            writer.EndMessage();
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCrucio, SendOption.Reliable);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
 
             crucioObject.Destroy();
 
@@ -1259,11 +1260,11 @@ internal class Main
     {
         CreateCrucio(pos, owner);
 
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCrucio);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCrucio, SendOption.Reliable);
         writer.Write(owner._Object.PlayerId);
         writer.Write(pos.x);
         writer.Write(pos.y);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void CreateCurse(Vector2 pos, ModdedPlayerClass owner)
@@ -1277,8 +1278,8 @@ internal class Main
         curse.SpellSprites = Assets.CurseSprite.ToArray();
         curse.OnHit += (spell, player) =>
         {
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCurse);
-            writer.EndMessage();
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyCurse, SendOption.Reliable);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
 
             curseObject.Destroy();
 
@@ -1299,11 +1300,11 @@ internal class Main
     {
         CreateCurse(pos, owner);
 
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCurse);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.CreateCurse, SendOption.Reliable);
         writer.Write(owner._Object.PlayerId);
         writer.Write(pos.x);
         writer.Write(pos.y);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void DestroySpell(string name)
@@ -1315,10 +1316,10 @@ internal class Main
     {
         AssignRole(player, role);
 
-        var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.AssignRole);
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.AssignRole, SendOption.Reliable);
         writer.Write(player._Object.PlayerId);
         writer.Write(role.RoleName);
-        writer.EndMessage();
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public void AssignRole(ModdedPlayerClass player, Role role)

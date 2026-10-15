@@ -1,4 +1,5 @@
-﻿using Reactor.Utilities.Extensions;
+using Hazel;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
 namespace HarryPotter.Classes;
@@ -49,10 +50,10 @@ public class WorldItem
         else
         {
             Delete();
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.TryPickupItem);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.TryPickupItem, SendOption.Reliable);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(Id);
-            writer.EndMessage();
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
     }
 
@@ -63,9 +64,9 @@ public class WorldItem
 
         if (AmongUsClient.Instance.AmHost)
         {
-            var writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyItem);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)Packets.DestroyItem, SendOption.Reliable);
             writer.Write(Id);
-            writer.EndMessage();
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
     }
 }

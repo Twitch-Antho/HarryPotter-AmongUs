@@ -27,11 +27,31 @@ jobs:
           set -o pipefail
           dotnet restore HarryPotter.sln 2>&1 | tee restore.log || { grep -E "error|NU1" restore.log | head -30 | sed 's/^/::error::/'; exit 1; }
 
+      - name: Inspecter l'API du jeu (temporaire)
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          pip install -q dnfile
+          DLL=$(find ~/.nuget/packages/amongus.gamelibs.steam -name Assembly-CSharp.dll | head -1)
+          cat > /tmp/insp.py <<'PY'
+          import sys, dnfile
+          pe = dnfile.dnPE(sys.argv[1]); md = pe.net.mdtables
+          want = sys.argv[2].split(',')
+          rows = list(md.TypeDef.rows)
+          for i, t in enumerate(rows):
+              if str(t.TypeName) not in want: continue
+              f = [str(x.row.Name) for x in t.FieldList]
+              m = sorted(set(str(x.row.Name) for x in t.MethodList))
+              print(f"{t.TypeName} | fields: {', '.join(f)} | methods: {', '.join(m)}")
+          PY
+          while read -r line; do echo "::notice title=API::$line"; done < <(python3 /tmp/insp.py "$DLL" "$(cat .ci-inspect 2>/dev/null || echo PlayerVoteArea)")
+
       - name: Build (Release)
         shell: bash
         run: |
           set -o pipefail
-          dotnet build HarryPotter.sln -c Release --no-restore 2>&1 | tee build.log || { grep -E ": error " build.log | sort -u | head -40 | sed 's/^/::error::/'; exit 1; }
+          dotnet build HarryPotter.sln -c Release --no-restore 2>&1 | tee build.log || { msg=$(grep -E ": error " build.log | sed -E 's#^.*/HarryPotter-AmongUs/##; s# \[.*\]$##' | sort -u | head -300 | awk '{printf "%s%%0A", $0}'); echo "::error title=Erreurs de compilation::$msg"; exit 1; }
 
       - name: Upload DLL
         uses: actions/upload-artifact@v4
