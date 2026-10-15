@@ -1,0 +1,40 @@
+name: Build mod
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet restore HarryPotter.sln 2>&1 | tee restore.log || { grep -E "error|NU1" restore.log | head -30 | sed 's/^/::error::/'; exit 1; }
+
+      - name: Build (Release)
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet build HarryPotter.sln -c Release --no-restore 2>&1 | tee build.log || { grep -E ": error " build.log | sort -u | head -40 | sed 's/^/::error::/'; exit 1; }
+
+      - name: Upload DLL
+        uses: actions/upload-artifact@v4
+        with:
+          name: HarryPotter
+          path: HarryPotter/bin/Release/net6.0/HarryPotter.dll

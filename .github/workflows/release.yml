@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag de la release (ex : v2.3.0)"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build (Release)
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet restore HarryPotter.sln
+          dotnet build HarryPotter.sln -c Release --no-restore 2>&1 | tee build.log || { grep -E ": error " build.log | sort -u | head -40 | sed 's/^/::error::/'; exit 1; }
+
+      - name: Préparer les archives (BepInEx + Reactor + mod)
+        shell: bash
+        run: |
+          set -euo pipefail
+          CSPROJ=HarryPotter/HarryPotter.csproj
+          BEPINEX=$(grep -o 'BepInEx.Unity.IL2CPP" Version="6.0.0-be.[0-9]*' $CSPROJ | sed 's/.*be\.//')
+          REACTOR=$(grep -o 'Include="Reactor" Version="[^"]*' $CSPROJ | sed 's/.*Version="//')
+          DLL=HarryPotter/bin/Release/net6.0/HarryPotter.dll
+          REACTOR_DLL=$(find ~/.nuget/packages/reactor/$REACTOR -name Reactor.dll | head -1)
+
+          curl -fsSL -o page.html https://builds.bepinex.dev/projects/bepinex_be
+          mkdir -p dist
+          for ARCH in x86 x64; do
+            NAME=$(grep -o "BepInEx-Unity.IL2CPP-win-$ARCH-6.0.0-be.$BEPINEX+[^\"']*.zip" page.html | head -1)
+            curl -fsSL -o bepinex-$ARCH.zip "https://builds.bepinex.dev/projects/bepinex_be/$BEPINEX/$NAME"
+            mkdir -p pkg-$ARCH
+            unzip -q bepinex-$ARCH.zip -d pkg-$ARCH
+            mkdir -p pkg-$ARCH/BepInEx/plugins
+            cp "$REACTOR_DLL" pkg-$ARCH/BepInEx/plugins/Reactor.dll
+            cp "$DLL" pkg-$ARCH/BepInEx/plugins/HarryPotter.dll
+          done
+          (cd pkg-x86 && zip -qr ../dist/HarryPotter-Steam-Itch.zip .)
+          (cd pkg-x64 && zip -qr ../dist/HarryPotter-Epic-MicrosoftStore.zip .)
+          cp "$DLL" dist/HarryPotter.dll
+          ls -la dist
+
+      - name: Publier la release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: Harry Potter ${{ github.event.inputs.tag || github.ref_name }}
+          body_path: RELEASE_NOTES.md
+          files: dist/*

@@ -1,17 +1,6 @@
-# Repertoires générés par Visual Studio
-.vs/
-src/.vs/
-
-# Répertoires générés par l'IDE JetBrains
-.idea/
-src/.idea/
-
-# Fichiers compilés
-src/bin/
-src/obj/
-
-# Fichiers spécifiques à Git
-.git/
-
-# Fichier de bugs (optionnel, selon son contenu)
+HarryPotter/bin
+HarryPotter/obj
+.vs
+.git
+.idea
 BUGS.txt

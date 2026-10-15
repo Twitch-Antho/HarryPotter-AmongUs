@@ -1,0 +1,57 @@
+ManifestFileVersion: 0
+CRC: 962220338
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 8349923932a0e2859de9d614bcd83fb0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 649dc5349e9764c29e7dc8fa570c9415
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 49
+  Script: {instanceID: 0}
+- Class: 62
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/SmallSnitchIco.png
+- Assets/GhostStoneIco.png
+- Assets/BasWorldIcon.png
+- Assets/CrucioF1.png
+- Assets/White.png
+- Assets/PhiloStoneWorldIcon.png
+- Assets/CrucioF2.png
+- Assets/BeerIcon.png
+- Assets/CrucioButton.png
+- Assets/DelumWorldIcon.png
+- Assets/DDButton.png
+- Assets/CurseButton.png
+- Assets/InvisButton.png
+- Assets/ElderWandIco.png
+- Assets/MapWorldIcon.png
+- Assets/SortingHatIcon.png
+- Assets/RightPanelCloseButton.png
+- Assets/KeyIco.png
+- Assets/ImperioButton.png
+- Assets/HourglassButton.png
+- Assets/SnitchWorldIcon.png
+- Assets/SnitchMaterial.physicsMaterial2D
+- Assets/CurseF1.png
+- Assets/SnitchIco.png
+- Assets/SmallSortIco.png
+- Assets/GhostStoneWorldIcon.png
+- Assets/KeyWorldIcon.png
+- Assets/DelumIco.png
+- Assets/MarkButton.png
+- Assets/BeerWorldIcon.png
+- Assets/MapIco.png
+- Assets/SortingHatWorldIcon.png
+- Assets/CurseF2.png
+- Assets/ElderWandWorldIcon.png
+- Assets/stringData.json
+Dependencies: []

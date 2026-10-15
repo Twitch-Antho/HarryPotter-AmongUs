@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>HarryPotter</RootNamespace>
+        <AssemblyName>HarryPotter</AssemblyName>
+        <LangVersion>latest</LangVersion>
+        <DebugType>embedded</DebugType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+        <!-- Dossier d'installation d'Among Us (modifiable avec -p:AmongUs="...") -->
+        <AmongUs Condition="'$(AmongUs)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Among Us</AmongUs>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AmongUs.GameLibs.Steam" Version="2026.9.29" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.735" Private="false" ExcludeAssets="runtime;native" />
+        <PackageReference Include="Reactor" Version="2.5.1-ci.400" />
+
+        <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" PrivateAssets="all" ExcludeAssets="runtime" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\*" />
+        <EmbeddedResource Include="Resources\Hats\**" />
+    </ItemGroup>
+
+    <!-- Copie la DLL dans BepInEx/plugins si le jeu est installé à cet endroit -->
+    <Target Name="CopyToGame" AfterTargets="Build" Condition="Exists('$(AmongUs)\BepInEx\plugins')">
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(AmongUs)\BepInEx\plugins\" />
+    </Target>
+</Project>
