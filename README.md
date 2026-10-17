@@ -11,7 +11,7 @@ Compatible avec **Among Us 2026.9.29** (Steam, Epic, Microsoft Store), **BepInEx
 
 # Tuto d'installation
 
-Pour un didacticiel d'installation vidéo, allez [Tuto](https://www.youtube.com/watch?v=YfvfaTHEN1Y).
+Pour un tuto d'installation vidéo, allez [Tuto](https://www.youtube.com/watch?v=YfvfaTHEN1Y).
 
 - Allez sur la [dernière version](https://github.com/Twitch-Antho/HarryPotter-AmongUs/releases/latest).
 - Téléchargez `HarryPotter-Steam-Itch.zip` (Steam ou Itch.io) ou `HarryPotter-Epic-MicrosoftStore.zip` (Epic Games ou Microsoft Store).
